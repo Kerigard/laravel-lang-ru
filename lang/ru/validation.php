@@ -91,6 +91,7 @@ return [
         'numeric' => 'Значение поля :attribute не может быть больше :max.',
         'string' => 'Количество символов в поле :attribute не может превышать :max.',
     ],
+    'max_digits' => 'Количество цифр в поле :attribute не может превышать :max.',
     'mimes' => 'Файл в поле :attribute должен быть одного из следующих типов: :values.',
     'mimetypes' => 'Файл в поле :attribute должен быть одного из следующих типов: :values.',
     'min' => [
@@ -99,6 +100,7 @@ return [
         'numeric' => 'Значение поля :attribute должно быть не меньше :min.',
         'string' => 'Количество символов в поле :attribute должно быть не меньше :min.',
     ],
+    'min_digits' => 'Количество цифр в поле :attribute должно быть не меньше :min.',
     'multiple_of' => 'Значение поля :attribute должно быть кратным :value.',
     'not_in' => 'Выбранное значение для :attribute некорректно.',
     'not_regex' => 'Значение поля :attribute некорректно.',
