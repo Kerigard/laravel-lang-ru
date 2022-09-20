@@ -121,6 +121,7 @@ return [
     'required' => 'Поле :attribute обязательно для заполнения.',
     'required_array_keys' => 'Массив в поле :attribute обязательно должен иметь ключи: :values.',
     'required_if' => 'Поле :attribute обязательно для заполнения, когда :other равно :value.',
+    'required_if_accepted' => 'Поле :attribute обязательно, когда принято :other.',
     'required_unless' => 'Поле :attribute обязательно для заполнения, когда :other не равно :values.',
     'required_with' => 'Поле :attribute обязательно для заполнения, когда :values указано.',
     'required_with_all' => 'Поле :attribute обязательно для заполнения, когда :values указано.',
