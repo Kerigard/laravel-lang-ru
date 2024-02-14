@@ -1,10 +1,22 @@
-# laravel-lang-ru
+# Laravel Lang Ru
 
-Русские языковые ресурсы для laravel.
+Русские языковые ресурсы для Laravel.
 
 Перевод основан на репозитории https://github.com/Laravel-Lang/lang.
 
-## Установка
+## Установка через composer
+
+``` bash
+composer require kerigard/laravel-lang-ru
+```
+
+Опубликуйте языковые ресурсы, используя artisan команду `vendor:publish`, чтобы изменить файлы локализации:
+
+```bash
+php artisan vendor:publish --provider="Kerigard\LaravelLangRu\LangRuServiceProvider"
+```
+
+## Ручная установка
 
 ### Laravel 9 и выше (папка lang находится в корне проекта)
 
