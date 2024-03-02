@@ -1,15 +1,20 @@
 <?php
 
+require_once __DIR__.'/../../src/Contracts/Parser.php';
+require_once __DIR__.'/../../src/Services/PhpParser.php';
+
+use Kerigard\LaravelLangRu\Services\PhpParser;
+
 $baseDirectory = __DIR__.'/../../lang/ru/';
 $excludes = [
-    'validation.php' => ['custom', 'attributes'],
+    'validation.php' => ["'custom'", "'custom'.'attribute-name'", "'attributes'"],
 ];
 
 $files = files();
 
 foreach ($files as $file) {
     $content = content($file);
-    $source = source($content);
+    $source = (new PhpParser($content))->parse();
     $path = "{$baseDirectory}{$file}";
 
     if (! file_exists($path)) {
@@ -22,10 +27,12 @@ foreach ($files as $file) {
         continue;
     }
 
-    $target = target($path);
-    $result = merge($target, $source);
+    $target = (new PhpParser())->load($path)->parse();
+    $result = merge($target, $source, $excludes[$file] ?? []);
 
-    save($path, $result, $excludes[$file] ?? []);
+    if (file_put_contents($path, $result) === false) {
+        throw new Exception("Unable to write file {$path}");
+    }
 
     echo "File updated {$path}\n";
 }
@@ -75,82 +82,25 @@ function api(?string $file = null): array
     return json_decode($response, true);
 }
 
-function source(string $content): array
+function merge(PhpParser $target, PhpParser $source, array $excludes = []): string
 {
-    return eval(substr($content, 5));
-}
-
-function target(string $path): array
-{
-    return require $path;
-}
-
-function merge(array $target, array $source): array
-{
-    foreach ($target as $key => $value) {
-        if (! array_key_exists($key, $source)) {
-            continue;
-        }
-
-        if (is_array($value)) {
-            foreach ($value as $key2 => $value2) {
-                if (array_key_exists($key2, @$source[$key])) {
-                    $source[$key][$key2] = $value2;
+    foreach ($target->items() as $key => $token) {
+        if (array_key_exists('value', $token) && ! $source->has($key)) {
+            foreach ($excludes as $exclude) {
+                if ($token['key'] == $exclude || $token['key'] == "{$exclude}.{$token['array_key']}") {
+                    continue 2;
                 }
             }
-        } else {
-            $source[$key] = $value;
+
+            $target->remove($key);
         }
     }
 
-    return $source;
-}
-
-function save(string $path, array $result, array $exclude = []): void
-{
-    if (empty($result)) {
-        return;
-    }
-
-    $stubPath = __DIR__.'/stubs/'.pathinfo($path, PATHINFO_FILENAME).'.stub';
-
-    if (file_exists($stubPath)) {
-        $stub = file_get_contents($stubPath);
-    } else {
-        $stub = "<?php\n\nreturn [\n{{ \$result }}\n];\n";
-    }
-
-    $lines = [];
-
-    foreach ($result as $key => $value) {
-        if (in_array($key, $exclude)) {
-            continue;
+    foreach ($source->items() as $key => $token) {
+        if (array_key_exists('value', $token) && ! $target->has($key)) {
+            $target->set($token, $token['value']);
         }
-
-        line($lines, $key, $value);
     }
 
-    $content = str_replace('{{ $result }}', implode("\n", $lines), $stub);
-
-    if (file_put_contents($path, $content) === false) {
-        throw new Exception("Unable to write file {$path}");
-    }
-}
-
-function line(array &$lines, string $key, string|array $value, int $indent = 4): void
-{
-    $prefix = str_pad('', $indent);
-
-    if (is_array($value)) {
-        $lines[] = "{$prefix}'$key' => [";
-
-        foreach ($value as $key2 => $value2) {
-            line($lines, $key2, $value2, $indent*2);
-        }
-
-        $lines[] = "{$prefix}],";
-    } else {
-        $value = str_replace("'", "\\'", $value);
-        $lines[] = "{$prefix}'{$key}' => '{$value}',";
-    }
+    return $target->raw();
 }

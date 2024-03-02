@@ -6,7 +6,9 @@
 
 ## Установка через composer
 
-``` bash
+Laravel 10 и выше.
+
+```bash
 composer require kerigard/laravel-lang-ru
 ```
 
@@ -16,7 +18,24 @@ composer require kerigard/laravel-lang-ru
 php artisan vendor:publish --provider="Kerigard\LaravelLangRu\LangRuServiceProvider"
 ```
 
+### Автоматический перевод языковых ресурсов
+
+По умолчанию переводит все файлы из папки lang с английского на русский язык.
+
+```bash
+php artisan lang:translate
+```
+
+Можно указать с какого и на какой язык выполнять перевод, а так же конкретные папки и файлы.
+
+```bash
+php artisan lang:translate --source=en --target=ru --filter=en/validation.php --filter=vendor/my-package
+```
+
 ## Ручная установка
+
+> [!NOTE]
+> При данном варианте установки копируются только файлы с языковыми ресурсами
 
 ### Laravel 9 и выше (папка lang находится в корне проекта)
 
