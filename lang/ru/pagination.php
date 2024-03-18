@@ -13,7 +13,7 @@ return [
     |
     */
 
-    'next' => 'Вперед &raquo;',
+    'next' => 'Вперёд &raquo;',
     'previous' => '&laquo; Назад',
 
 ];
