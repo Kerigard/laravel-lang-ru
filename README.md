@@ -6,8 +6,6 @@
 
 ## Установка через composer
 
-Laravel 10 и выше.
-
 ```bash
 composer require kerigard/laravel-lang-ru
 ```
