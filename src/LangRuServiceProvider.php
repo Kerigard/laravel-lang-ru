@@ -2,12 +2,14 @@
 
 namespace Kerigard\LaravelLangRu;
 
+use Illuminate\Foundation\Application;
 use Illuminate\Translation\FileLoader;
 use Illuminate\Translation\TranslationServiceProvider;
 use Kerigard\LaravelLangRu\Commands\Translate;
 use Kerigard\LaravelLangRu\Contracts\Parser;
 use Kerigard\LaravelLangRu\Contracts\Translator;
 use Kerigard\LaravelLangRu\Services\GoogleTranslator;
+use Kerigard\LaravelLangRu\Services\JsonParser;
 use Kerigard\LaravelLangRu\Services\PhpParser;
 
 class LangRuServiceProvider extends TranslationServiceProvider
@@ -42,7 +44,12 @@ class LangRuServiceProvider extends TranslationServiceProvider
 
     protected function defineBindings(): void
     {
-        $this->app->bind(Parser::class, PhpParser::class);
+        $this->app->bind(Parser::class, function (Application $application, array $parameters) {
+            return match (@$parameters['extension']) {
+                'json' => new JsonParser(@$parameters['code']),
+                default => new PhpParser(@$parameters['code']),
+            };
+        });
         $this->app->bind(Translator::class, GoogleTranslator::class);
     }
 

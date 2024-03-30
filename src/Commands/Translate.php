@@ -36,6 +36,10 @@ class Translate extends Command
             ? File::directories($this->laravel->langPath('vendor'))
             : [];
 
+        if (File::isFile($file = $this->laravel->langPath("{$source}.json"))) {
+            $files[] = new SplFileInfo($file);
+        }
+
         foreach ($vendorDirs as $dir) {
             array_push($files, ...File::allFiles($this->joinPaths($dir, $source)));
         }
@@ -49,7 +53,7 @@ class Translate extends Command
                 }
             }
 
-            if (! empty($this->option('filter')) || $file->getExtension() != 'php') {
+            if (! empty($this->option('filter')) || ! in_array($file->getExtension(), ['php', 'json'])) {
                 unset($files[$key]);
             }
         }
@@ -65,12 +69,15 @@ class Translate extends Command
     private function translateFile(SplFileInfo $file, string $target): void
     {
         /** @var \Kerigard\LaravelLangRu\Contracts\Parser */
-        $sourceParser = $this->laravel->make(Parser::class);
+        $sourceParser = $this->laravel->make(Parser::class, ['extension' => $file->getExtension()]);
         $source = $sourceParser->load($file->getRealPath())->parse();
 
-        $targetPath = $this->joinPaths(dirname($file->getPath()), $target, $file->getFilename());
+        $targetPath = $file->getPath() == $this->laravel->langPath()
+            ? $this->joinPaths($file->getPath(), "{$target}." . $file->getExtension())
+            : $this->joinPaths(dirname($file->getPath()), $target, $file->getFilename());
+
         /** @var \Kerigard\LaravelLangRu\Contracts\Parser */
-        $targetParser = $this->laravel->make(Parser::class);
+        $targetParser = $this->laravel->make(Parser::class, ['extension' => $file->getExtension()]);
         $targetParser = $targetParser->load($targetPath);
         $target = $targetParser->exists() ? $targetParser->parse() : $source;
 
@@ -94,7 +101,7 @@ class Translate extends Command
 
         $content = $this->translator->translate($content);
 
-        $content = preg_replace_array('/<\s?:.+>/iu', $attributes[1], $content);
+        $content = preg_replace_array('/<\s?:.+?>/iu', $attributes[1], $content);
         $content = preg_replace_array('/<!.+>/iu', $symbols[1], $content);
 
         return $content;

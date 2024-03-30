@@ -110,4 +110,58 @@ class ParserTest extends TestCase
 
         $this->assertEquals($content, $parser->raw());
     }
+
+    public function test_parse_json_code()
+    {
+        /** @var \Kerigard\LaravelLangRu\Contracts\Parser */
+        $parser = app(Parser::class, [
+            'extension' => 'json',
+            'code' => json_encode(require lang_path('en/validation.php')),
+        ]);
+
+        $this->assertTrue($parser->exists());
+
+        $parser->parse();
+
+        foreach ($parser->items() as $key => $item) {
+            if (! in_array($key, ['required', 'accepted_if'])) {
+                $parser->remove($key);
+            }
+        }
+
+        $items = $parser->items();
+
+        $this->assertCount(2, $items);
+        $this->assertArrayHasKey('required', $items);
+        $this->assertTrue($parser->has('required'));
+        $this->assertArrayHasKey('accepted_if', $items);
+        $this->assertTrue($parser->has('accepted_if'));
+        $this->assertArrayHasKey('key', $items['accepted_if']);
+        $this->assertArrayHasKey('array_key', $items['accepted_if']);
+        $this->assertArrayHasKey('value', $items['accepted_if']);
+
+        $parser->set([
+            'type' => 'item',
+            'array_key' => 'b-test',
+            'key' => 'b-test',
+            'value' => 'B test.',
+        ], 'Test B TR.');
+        $parser->set([
+            'type' => 'item',
+            'array_key' => 'a-test',
+            'key' => 'a-test',
+            'value' => 'A test.',
+        ], 'Test A TR.');
+
+        $content = <<<'EOT'
+            {
+                "a-test": "Test A TR.",
+                "accepted_if": "The :attribute field must be accepted when :other is :value.",
+                "b-test": "Test B TR.",
+                "required": "The :attribute field is required."
+            }
+            EOT;
+
+        $this->assertEquals($content, $parser->raw());
+    }
 }

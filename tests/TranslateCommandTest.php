@@ -2,6 +2,8 @@
 
 namespace Kerigard\LaravelLangRu\Tests;
 
+use Illuminate\Support\Facades\File;
+
 class TranslateCommandTest extends TestCase
 {
     public function test_command(): void
@@ -50,5 +52,24 @@ class TranslateCommandTest extends TestCase
         $this->assertFileDoesNotExist(lang_path('ru/pagination.php'));
         $this->assertFileExists(lang_path('ru/passwords.php'));
         $this->assertFileDoesNotExist(lang_path('ru/validation.php'));
+    }
+
+    public function test_translate_json()
+    {
+        File::delete([lang_path('en.json'), lang_path('ru.json')]);
+        File::put(lang_path('en.json'), json_encode(require lang_path('en/auth.php')));
+
+        $this->artisan('lang:translate', ['--filter' => ['en.json']])->assertSuccessful();
+        $this->assertFileExists(lang_path('ru.json'));
+
+        $content = <<<'EOT'
+            {
+                "failed": "These credentials do not match our records. TR.",
+                "password": "The provided password is incorrect. TR.",
+                "throttle": "Too many login attempts. Please try again in :seconds seconds. TR."
+            }
+            EOT;
+
+        $this->assertEquals($content, file_get_contents(lang_path('ru.json')));
     }
 }
