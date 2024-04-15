@@ -25,12 +25,6 @@ class Translate extends Command
         $source = $this->option('source');
         $target = $this->option('target');
 
-        $this->components->info("Перевод языковых ресурсов с {$source} на {$target}");
-
-        $this->translator = $this->laravel->make(Translator::class);
-        $this->translator->setSource($source);
-        $this->translator->setTarget($target);
-
         $files = File::allFiles($this->laravel->langPath($source));
         $vendorDirs = File::isDirectory($this->laravel->langPath('vendor'))
             ? File::directories($this->laravel->langPath('vendor'))
@@ -57,6 +51,18 @@ class Translate extends Command
                 unset($files[$key]);
             }
         }
+
+        if (empty($files)) {
+            $this->components->info('Нет языковых ресурсов для перевода.');
+
+            return;
+        }
+
+        $this->components->info("Перевод языковых ресурсов с {$source} на {$target}.");
+
+        $this->translator = $this->laravel->make(Translator::class);
+        $this->translator->setSource($source);
+        $this->translator->setTarget($target);
 
         foreach ($files as $file) {
             $path = Str::after($file->getRealPath(), $this->laravel->langPath(DIRECTORY_SEPARATOR));
