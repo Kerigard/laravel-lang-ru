@@ -1,5 +1,12 @@
 # Laravel Lang Ru
 
+<p align="center">
+  <a href="https://github.com/Kerigard/laravel-lang-ru/actions"><img src="https://github.com/Kerigard/laravel-lang-ru/workflows/tests/badge.svg" alt="Build Status"></a>
+  <a href="https://packagist.org/packages/Kerigard/laravel-lang-ru"><img src="https://img.shields.io/packagist/dt/Kerigard/laravel-lang-ru" alt="Total Downloads"></a>
+  <a href="https://packagist.org/packages/Kerigard/laravel-lang-ru"><img src="https://img.shields.io/packagist/v/Kerigard/laravel-lang-ru" alt="Latest Stable Version"></a>
+  <a href="https://packagist.org/packages/Kerigard/laravel-lang-ru"><img src="https://img.shields.io/packagist/l/Kerigard/laravel-lang-ru" alt="License"></a>
+</p>
+
 Русские языковые ресурсы для Laravel.
 
 Перевод основан на репозитории https://github.com/Laravel-Lang/lang.
