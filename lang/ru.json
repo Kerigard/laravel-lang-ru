@@ -26,11 +26,10 @@
     "Pagination Navigation": "Навигация",
     "Payment Required": "Требуется оплата",
     "Please click the button below to verify your email address.": "Пожалуйста, нажмите кнопку ниже, чтобы подтвердить свой адрес электронной почты.",
-    "Regards": "С уважением",
     "Regards,": "С уважением,",
     "Register": "Регистрация",
     "Reset Password": "Сбросить пароль",
-    "Reset Password Notification": "Оповещение о сбросе пароля",
+    "Reset your password": "Сбросить пароль",
     "results": "результатов",
     "Server Error": "Ошибка сервера",
     "Service Unavailable": "Сервис недоступен",
@@ -45,6 +44,7 @@
     "Too Many Requests": "Слишком много запросов",
     "Unauthorized": "Не авторизован",
     "Verify Email Address": "Подтвердить адрес электронной почты",
+    "Verify your email address": "Подтвердите Ваш адрес электронной почты",
     "Whoops!": "Упс!",
     "You are receiving this email because we received a password reset request for your account.": "Вы получили это письмо, потому что мы получили запрос на сброс пароля для Вашей учётной записи."
 }
