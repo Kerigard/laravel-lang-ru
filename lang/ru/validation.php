@@ -25,6 +25,7 @@ return [
     'any_of' => 'Значение поля :attribute не найдено в списке разрешённых.',
     'array' => 'Значение поля :attribute должно быть массивом.',
     'ascii' => 'Значение поля :attribute должно содержать только однобайтовые цифро-буквенные символы.',
+    'base64' => 'The :attribute field must be a valid Base64 string.',
     'before' => 'Значение поля :attribute должно быть датой до :date.',
     'before_or_equal' => 'Значение поля :attribute должно быть датой до или равной :date.',
     'between' => [
