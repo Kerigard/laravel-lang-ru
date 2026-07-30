@@ -24,6 +24,7 @@ return [
     'alpha_num' => 'Значение поля :attribute может содержать только буквы и цифры.',
     'any_of' => 'Значение поля :attribute не найдено в списке разрешённых.',
     'array' => 'Значение поля :attribute должно быть массивом.',
+    'array_keys' => 'The :attribute field must only contain the following keys: :values.',
     'ascii' => 'Значение поля :attribute должно содержать только однобайтовые цифро-буквенные символы.',
     'base64' => 'Значение поля :attribute должно содержать корректные данные в формате Base64.',
     'before' => 'Значение поля :attribute должно быть датой до :date.',
